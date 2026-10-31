@@ -1,0 +1,2 @@
+D:\Semister 02\OOPS\week 2\project'\project'\obj\Debug\project'.csproj.AssemblyReference.cache
+D:\Semister 02\OOPS\week 2\project'\project'\obj\Debug\project'.csproj.CoreCompileInputs.cache

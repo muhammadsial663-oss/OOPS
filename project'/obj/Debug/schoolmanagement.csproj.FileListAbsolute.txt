@@ -1,0 +1,7 @@
+D:\Semister 02\OOPS\week 2\project'\project'\bin\Debug\project'.exe.config
+D:\Semister 02\OOPS\week 2\project'\project'\bin\Debug\project'.exe
+D:\Semister 02\OOPS\week 2\project'\project'\bin\Debug\project'.pdb
+D:\Semister 02\OOPS\week 2\project'\project'\obj\Debug\schoolmanagement.csproj.AssemblyReference.cache
+D:\Semister 02\OOPS\week 2\project'\project'\obj\Debug\schoolmanagement.csproj.CoreCompileInputs.cache
+D:\Semister 02\OOPS\week 2\project'\project'\obj\Debug\project'.exe
+D:\Semister 02\OOPS\week 2\project'\project'\obj\Debug\project'.pdb
