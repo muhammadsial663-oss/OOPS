@@ -8,10 +8,17 @@ namespace schoolmanagement
       private sevice service = new sevice();
 
         // Main Driver
+        public void start()
+        {
+            Student();
+        }
+
+        // driver code
         public void Student()
         {
             while (true)
             {
+                
                 Console.WriteLine("\n==============================");
                 Console.WriteLine(" SCHOOL MANAGEMENT SYSTEM");
                 Console.WriteLine("==============================");
@@ -22,6 +29,9 @@ namespace schoolmanagement
 
                 Console.Write("Enter Choice: ");
                 string option = Console.ReadLine();
+
+                Console.Clear();
+
 
                 if (option == "1")
                 {
@@ -54,10 +64,12 @@ namespace schoolmanagement
 
             if (service.AdminLogin(username, password) == false)
             {
-                Console.WriteLine("Incorrect Username or Password!");
+                Console.WriteLine("Incorrect Username or Password!!");
                 return;
             }
-
+            
+            Console.Clear();
+   
             while (true)
             {
                 Console.WriteLine("\n========== ADMIN PANEL ==========");
@@ -72,37 +84,46 @@ namespace schoolmanagement
                 Console.WriteLine("9. Delete All Data");
                 Console.WriteLine("10. Main Menu");
                 Console.WriteLine("11. Update Admin Password");
+                Console.WriteLine("12. Give me the range of students :");
 
                 Console.Write("Enter Choice: ");
                 string option = Console.ReadLine();
+                Console.Clear();
+
 
                 if (option == "1")
                 {
                     AddStudent();
+                    Console.ReadKey();
                 }
                 else if (option == "2")
                 {
                     ViewAllStudents();
+                    Console.ReadKey();
                 }
                 else if (option == "3")
                 {
                     DeleteStudent();
+                    Console.ReadKey();
                 }
                 else if (option == "4")
                 {
                     UpdateMarks();
+                    Console.ReadKey();
                 }
                 else if (option == "5")
                 {
                     SearchStudent();
+                    Console.ReadKey();
                 }
                 else if (option == "6")
                 {
                     ViewSortedStudents();
+                    Console.ReadKey();
                 }
                 else if (option == "7")
                 {
-                    Console.WriteLine("Class Average: " + service.ClassAverage());
+                    Console.WriteLine("Total Average :"+ service.ClassAverage());
                 }
                 else if (option == "8")
                 {
@@ -110,27 +131,42 @@ namespace schoolmanagement
                 }
                 else if (option == "9")
                 {
-                    Console.Write("Enter YES to confirm: ");
+                    Console.Write("Enter YES to Delete All: ");
                     string confirm = Console.ReadLine();
-
                     if (confirm == "YES")
                     {
                         service.DeleteAllData();
-                        Console.WriteLine("All Data Clear!");
+                        Console.WriteLine("All data is cleared ");
                     }
                     else
                     {
-                        Console.WriteLine("Not Confirmed!");
+                        Console.WriteLine("Not confirmed Yet!!");
                     }
+                   
+                    
                 }
                 else if (option == "10")
                 {
+                    Console.WriteLine("Return to main manu");
                     break;
                 }
                 else if (option == "11")
                 {
                     UpdateAdmin();
+
                 }
+
+                //range
+                else if (option == "12")
+                {
+                    viewrange();
+                }
+
+                
+
+
+
+
                 else
                 {
                     Console.WriteLine("Wrong Option!");
@@ -139,7 +175,9 @@ namespace schoolmanagement
         }
 
         // Add Student
+        
         public void AddStudent()
+           
         {
             Console.Write("Enter Student Name: ");
             string name = Console.ReadLine();
@@ -154,11 +192,11 @@ namespace schoolmanagement
 
             if (service.AddStudent(student))
             {
-                Console.WriteLine("Student Added Successfully!");
+                Console.WriteLine("Added Sucessfully");
             }
             else
             {
-                Console.WriteLine("student not added!!");
+                Console.WriteLine("Not Added Yet");
             }
             
        
@@ -170,22 +208,15 @@ namespace schoolmanagement
         {
             List<model> students = service.GetAllStudents();
 
-            DisplayStudents(students);
+            Console.WriteLine("Name \t RollNumber \t Marks");
+            foreach(model student in students)
+            {
+                Console.WriteLine(student.GetName() +"\t\t"+ student.GetRollNumber()+"\t"+student.GetMarks() );
+            }
         }
 
         // Display Students
-        public void DisplayStudents(List<model> students)
-        {
-            Console.WriteLine("\nName\tRoll Number\tMarks");
-
-            foreach (model student in students)
-            {
-                Console.WriteLine(
-                    student.GetName() + "\t" +
-                    student.GetRollNumber() + "\t\t" +
-                    student.GetMarks());
-            }
-        }
+        
 
         // Delete Student
         public void DeleteStudent()
@@ -206,8 +237,18 @@ namespace schoolmanagement
         // Update Marks
         public void UpdateMarks()
         {
+            List<model>students= service.GetAllStudents();
             Console.Write("Enter Roll Number: ");
             int roll = int.Parse(Console.ReadLine());
+            for (int i = 0; i < students.Count; i++) 
+            {
+                if (students[i].GetRollNumber() == roll)
+                {
+                    Console.WriteLine("Name of the student : " + students[i].GetName());
+                    Console.WriteLine("Previous Marks : " + students[i].GetMarks());
+                }
+            }
+            
 
             Console.Write("Enter New Marks: ");
             float marks = float.Parse(Console.ReadLine());
@@ -222,33 +263,66 @@ namespace schoolmanagement
             }
         }
 
-        // Search Student
+        // Search Student by roll
         public void SearchStudent()
         {
-            Console.Write("Enter Roll Number: ");
-            int roll = int.Parse(Console.ReadLine());
-
-            model student = service.SearchStudent(roll);
-
-            if (student != null)
+            Console.WriteLine("Enter the Roll number :");
+            int roll= int.Parse(Console.ReadLine());
+            List<model>students= service.GetAllStudents();
+            bool found= false;
+            for(int i = 0;i < students.Count; i++)
             {
-                Console.WriteLine("Name: " + student.GetName());
-                Console.WriteLine("Roll Number: " + student.GetRollNumber());
-                Console.WriteLine("Marks: " + student.GetMarks());
+                if (students[i].GetRollNumber() == roll)
+                {
+                    Console.WriteLine("Name of the Student is:" + students[i].GetName());
+                    Console.WriteLine("Marks of the Student is: "+  students[i].GetMarks());
+                    found= true;
+                    break;
+                }
+                
             }
-            else
+            if (found == false)
             {
-                Console.WriteLine("Student Not Found!");
+                Console.WriteLine("Not found!");
             }
+
+            
         }
 
-        // Sort Students
+        // Sort Students\\\\\\
         public void ViewSortedStudents()
         {
             List<model> students = service.SortByMarks();
+            Console.WriteLine("Name \t RollNumber \t Marks");
+            foreach (model student in students)
+            {
+                Console.WriteLine(student.GetName() + "\t\t" + student.GetRollNumber() + "\t" + student.GetMarks());
+            }
 
-            DisplayStudents(students);
+
         }
+        ///range //////////
+
+    public void viewrange()
+        {
+            Console.WriteLine("Enter the starting range :");
+            int start= int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter the ending range : ");
+            int end = int.Parse(Console.ReadLine());
+
+            List<model>students= service.GetAllStudents();
+            Console.WriteLine("Name\t Rollnumber \t Marks");
+            for (int i = start; i < end; i++) {
+                service.range(start, end);
+                Console.WriteLine(students[i].GetName() + "\t" + students[i].GetRollNumber() + "\t\t" + students[i].GetMarks());
+            }
+            
+
+
+        }
+
+
+
 
         // Update Admin
         public void UpdateAdmin()
@@ -267,14 +341,18 @@ namespace schoolmanagement
         // User Menu
         public void UserMenu()
         {
+            Console.Clear();
             while (true)
             {
                 Console.WriteLine("\n========== USER PANEL ==========");
                 Console.WriteLine("1. View Result");
                 Console.WriteLine("2. Highest Marks");
                 Console.WriteLine("3. View All Names");
-                Console.WriteLine("4. Search By Name");
+                Console.WriteLine("4. Search By Name :");
                 Console.WriteLine("5. Main Menu");
+               
+                
+                Console.WriteLine("6. Student you want to match Name:");
 
                 Console.Write("Enter Choice: ");
                 string option = Console.ReadLine();
@@ -309,6 +387,43 @@ namespace schoolmanagement
                         Console.WriteLine(name);
                     }
                 }
+
+
+            //////matching  
+            ///
+
+
+
+                else if (option == "6")
+                {
+
+
+                    Console.WriteLine("Enter the name :");
+                    string name = Console.ReadLine();
+                    model student = service.match(name);
+                    if (student != null)
+                    {
+                        Console.WriteLine("Name:" + student.GetName());
+                        Console.WriteLine("Roll :" + student.GetRollNumber());
+                        Console.WriteLine("Marks :" + student.GetMarks());
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not found !!");
+                    }
+
+
+
+
+                }
+
+
+
+
+
+
+
+
                 else if (option == "4")
                 {
                     Console.Write("Enter Name: ");
@@ -337,5 +452,8 @@ namespace schoolmanagement
                 }
             }
         }
+
+        /////matching 
+       
     }
 }

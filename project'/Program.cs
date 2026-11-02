@@ -12,7 +12,7 @@ namespace schoolmanagement
         static void Main(string[] args)
         {
             UI ui = new UI();
-            ui.Student();
+            ui.start();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,30 +10,21 @@ namespace schoolmanagement
 {
     internal class sevice
     {
-        private Repo repo = new Repo();
+        private readonly Repo repo = new Repo();
 
         // Add Student
         public bool AddStudent(model student)
         {
             List<model> students = repo.GetStudentsFromFile();
-
-            if (students.Count >= 100)
+            for(int i=0; i < students.Count; i++)
             {
-                return false;
-            }
-
-            foreach (model s in students)
-            {
-                if (s.GetRollNumber() == student.GetRollNumber())
+                if (students[i].GetRollNumber() == student.GetRollNumber())
                 {
                     return false;
                 }
             }
-
             students.Add(student);
-
             repo.SaveAllToFile(students);
-
             return true;
         }
 
@@ -45,56 +37,48 @@ namespace schoolmanagement
         // Delete Student
         public bool DeleteStudent(int roll)
         {
-            List<model> students = repo.GetStudentsFromFile();
-
+           List<model>students=repo.GetStudentsFromFile();
             for (int i = 0; i < students.Count; i++)
             {
                 if (students[i].GetRollNumber() == roll)
                 {
                     students.RemoveAt(i);
-
                     repo.SaveAllToFile(students);
-
                     return true;
                 }
             }
-
             return false;
         }
 
         // Update Marks
         public bool UpdateMarks(int roll, float newMarks)
         {
-            List<model> students = repo.GetStudentsFromFile();
-
-            foreach (model student in students)
+            List<model>students= repo.GetStudentsFromFile();
+            for (int i = 0; i < students.Count; i++) 
             {
-                if (student.GetRollNumber() == roll)
+                if (students[i].GetRollNumber() == roll)
                 {
-                    student.SetMarks(newMarks);
-
+                    students[i].SetMarks(newMarks);
                     repo.SaveAllToFile(students);
-
                     return true;
                 }
-            }
 
+            }
             return false;
         }
 
         // Search By Roll Number
         public model SearchStudent(int roll)
         {
-            List<model> students = repo.GetStudentsFromFile();
-
-            foreach (model student in students)
+          List<model>students= repo.GetStudentsFromFile();
+            foreach(model s in students)
             {
-                if (student.GetRollNumber() == roll)
+                if (s.GetRollNumber() == roll)
                 {
-                    return student;
+                    return s;
+
                 }
             }
-
             return null;
         }
 
@@ -114,39 +98,39 @@ namespace schoolmanagement
             return null;
         }
 
+       
+
+
+
         // Sort By Marks
         public List<model> SortByMarks()
         {
-            List<model> students = repo.GetStudentsFromFile();
-
-            for (int i = 0; i < students.Count - 1; i++)
+           List<model>student= repo.GetStudentsFromFile();
+            for(int i = 0; i < student.Count - 1; i++)
             {
-                for (int j = 0; j < students.Count - i - 1; j++)
+                for(int j = 0; j < student.Count - i - 1; j++)
                 {
-                    if (students[j].GetMarks() < students[j + 1].GetMarks())
+                    if (student[j].GetMarks() < student[j + 1].GetMarks())
                     {
-                        model temp = students[j];
+                        model temp= student[j];
+                        student[j] = student[j + 1];
+                        student[j + 1] = temp;
 
-                        students[j] = students[j + 1];
 
-                        students[j + 1] = temp;
                     }
                 }
             }
+            repo.SaveAllToFile(student);
+            return student;
 
-            repo.SaveAllToFile(students);
-
-            return students;
+            
         }
 
         // Class Average
         public float ClassAverage()
         {
            List<model>student=repo.GetStudentsFromFile();
-            if (student.Count == 0)
-            {
-                return 0;
-            }
+            
             float total = 0;
             for(int i = 0; i < student.Count; i++)
             {
@@ -177,60 +161,102 @@ namespace schoolmanagement
         // Highest Marks
         public float HighestMarks()
         {
-            List<model> students = repo.GetStudentsFromFile();
-
-            if (students.Count == 0)
+            List <model>student=repo.GetStudentsFromFile();
+            if(student==null || student.Count== 0)
             {
                 return 0;
             }
-
-            float highest = students[0].GetMarks();
-            for(int i = 1; i < students.Count; i++)
+            
+            float highest = student[0].GetMarks();
+            for(int i=1; i<student.Count; i++)
             {
-                if (students[i].GetMarks() > highest)
+                if (student[i].GetMarks() > highest)
                 {
-                    highest= students[i].GetMarks();
+                    highest = student[i].GetMarks();
                 }
 
+               
             }
+            return highest;
            
 
-            return highest;
+           
         }
+
+        
+
+        //filter 2////////
+
+
+        public List<model> range(int start, int end)
+        {
+            List<model> students = repo.GetStudentsFromFile();
+            for (int i = start; i < end; )
+            {
+                return students;
+            }
+            List<model>range=new List<model>(students); 
+            return range;
+
+
+        }
+
+
+
+
+         //filter 3/////
+
+        public model match(string name)
+        {
+            List<model> Student = repo.GetStudentsFromFile();
+            foreach (model st in Student)
+            {
+                if (st.GetName().ToLower() == name.ToLower()) 
+
+                return st;
+            }
+            return null;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
         // Get All Names
         public List<string> GetAllNames()
         {
-            List<model>students=repo.GetStudentsFromFile();
-
-            List<string> names = new List<string>();
-
-            foreach (model student in students) 
+            List<model> student = repo.GetStudentsFromFile();
+            List<string>names= new List<string>();
+            foreach(model st in student)
             {
-                names.Add(student.GetName());           
+                names.Add(st.GetName());
             }
-
             return names;
-           
         }
 
         // Admin Login
         public bool AdminLogin(string username, string password)
         {
-            string[] admin = repo.GetAdminFromFile();
-
+           string[] admin = repo.GetAdminFromFile();
             if (username == admin[0] && password == admin[1])
             {
                 return true;
             }
-
             return false;
         }
 
         // Update Admin
-        public void UpdateAdmin(string username, string password)
+        public void UpdateAdmin(string newusername, string newpassword)
         {
-            repo.SaveAdminToFile(username, password);
+            repo.SaveAdminToFile(newusername, newpassword);
         }
     }
 }

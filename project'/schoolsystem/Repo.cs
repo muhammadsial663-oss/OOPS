@@ -9,53 +9,48 @@ namespace schoolmanagement
 {
     internal class Repo
     {
-        string file = "students.txt";
-        string adminFile = "admin.txt";
+        readonly string file = "students.txt";
+        readonly string adminFile = "admin.txt";
 
         //save
-        public void SaveAllToFile(List<model> students)
+       public void SaveAllToFile(List<model>Students)
         {
             using (StreamWriter writer = new StreamWriter(file, false))
             {
-                foreach (model student in students)
+                foreach(model student in Students)
                 {
                     writer.WriteLine(student.ToString());
                 }
-            }
-        }
 
+            }
+            
+            
+            }
         // Get
         public List<model> GetStudentsFromFile()
         {
-            List<model> students = new List<model>();
-
+           List<model>students= new List<model>();
             if (File.Exists(file))
             {
                 using (StreamReader reader = new StreamReader(file))
                 {
                     string line;
-
                     while ((line = reader.ReadLine()) != null)
                     {
                         string[] parts = line.Split(',');
-
                         string name = parts[0];
                         int roll = int.Parse(parts[1]);
                         float marks = float.Parse(parts[2]);
-                        model student =    new model(name, roll, marks);
-
+                        model student = new model(name, roll, marks);
                         students.Add(student);
+
                     }
                 }
             }
-            else
-            {
-                students.Add(new model("ali", 1, 1009));
-                students.Add(new model("aminaa", 3, 1000));
-                students.Add(new model("ammar", 4, 1001));
-                students.Add(new model("hafsa", 5, 1054));
-            }
 
+
+
+            
             return students;
         }
 
@@ -64,16 +59,16 @@ namespace schoolmanagement
         {
             if (File.Exists(adminFile))
             {
-                using (StreamReader reader = new StreamReader(adminFile))
+                using(StreamReader reader=new StreamReader(adminFile))
                 {
                     string username = reader.ReadLine();
                     string password = reader.ReadLine();
-
+                    
                     return new string[] { username, password };
                 }
             }
-
             return new string[] { "admin", "123" };
+
         }
 
         // Save Admin Data
